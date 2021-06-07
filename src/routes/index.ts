@@ -1,5 +1,5 @@
 import { Application } from 'express';
-
+import { getInfo } from '../controller';
 
 class Routes {
     public app: Application;
@@ -9,9 +9,7 @@ class Routes {
     }
 
     constuctRoutes(): void{
-        this.app.get('/api/info', (_req, res) => {
-            res.send('Hello World');
-        });
+        this.app.get('/api/info', getInfo);
 
         this.app.all('*', (_req, res) => {
             res.send('plis work');
