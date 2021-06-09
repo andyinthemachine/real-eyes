@@ -13,8 +13,8 @@ const logRequest = (req: Request, res: Response, next: () => void) :void => {
 }
 
 const logError = (err: ErrorRequestHandler, req: Request, res: Response, next: () => void): void => {
-    logger.error(err)
-    next()
+    logger.error(err);
+    next();
 }
 
 export {

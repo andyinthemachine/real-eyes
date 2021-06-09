@@ -1,7 +1,7 @@
-import { successResponse } from '../../src/services/response';
+import { successResponse, errorResponse } from '../../src/services/response';
 
 describe(' 🛠️ services -> ', () => {
-    test('getEnvironment returns the correct env', () => {
+    test('successResponse returns the correct output', () => {
         expect(successResponse({key: 'value'})).toEqual(
             {
                 'code': 200, 
@@ -9,5 +9,13 @@ describe(' 🛠️ services -> ', () => {
                 'success': true
             }
         );
+    });
+
+    test('errorResponse returns the correct output', () => {
+        expect(errorResponse('error')).toEqual({
+            'code': 400, 
+            'data': {'message': 'error'}, 
+            'error': true
+        })
     });
 })
