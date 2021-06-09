@@ -21,6 +21,27 @@ const INFO: iInfo = {
         method: 'GET',
         version: '1'
       },
+      {
+        uri: 'api/encode',
+        controller: 'encodeAsset',
+        description: 'Downloads an asset and encodes it to a specified format',
+        method: 'POST',
+        version: '1'
+      },
+      {
+        uri: 'api/metadata',
+        controller: 'getMetadata',
+        description: 'Fetch metadata for a downloadable asset',
+        method: 'GET',
+        version: '1'
+      },
+      {
+        uri: 'api/outputhls',
+        controller: 'outputHls',
+        description: 'Output hls assets for a downloadable file ',
+        method: 'GET',
+        version: '1'
+      },
     ]
 };
   
