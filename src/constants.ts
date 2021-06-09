@@ -7,6 +7,7 @@ interface iInfo {
         method: string;
         uri: string;
         version: string;
+        body?: any,
     }>,
 }
 
@@ -26,7 +27,12 @@ const INFO: iInfo = {
         controller: 'encodeAsset',
         description: 'Downloads an asset and encodes it to a specified format',
         method: 'POST',
-        version: '1'
+        version: '1',
+        body: {
+          url: 'Downloadbale asset url',
+          videoBitrate: 'Output asset bitrate value',
+          videoCodec: 'Output asset codec value or default=aac'
+        }
       },
       {
         uri: 'api/metadata?asset=<downlodable-asset-url>',
