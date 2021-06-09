@@ -1,5 +1,5 @@
 import { Application } from 'express';
-import { getInfo, encodeFile, getMetadata } from '../controller';
+import { getInfo, encodeAsset, getMetadata, outputHls} from '../controller';
 import { validateFileEncodeBody, validateMetadataQuery } from '../validator';
 
 class Routes {
@@ -14,7 +14,9 @@ class Routes {
 
         this.app.get('/api/metadata', validateMetadataQuery ,getMetadata)
 
-        this.app.post('/api/encode', validateFileEncodeBody, encodeFile);
+        this.app.post('/api/encode', validateFileEncodeBody, encodeAsset);
+
+        this.app.get('/api/outputhls', validateMetadataQuery, outputHls);
 
         this.app.all('*', (_req, res) => {
             res.send('Welcome to Real Eyes Api');

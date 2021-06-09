@@ -2,6 +2,7 @@ import path from 'path';
 import fs from 'fs';
 import ffmpeg from 'fluent-ffmpeg';
 import axios from 'axios';
+import { logger } from '../services/logger';
 
 /**
  * fetch the current environment
@@ -84,7 +85,6 @@ const getMetadata = (filePath: any): Promise<any> => {
     });
 }
 
-
 /**
  * Determine if a string is a valid URL
  * @param string 
@@ -99,11 +99,42 @@ const isUrl = (string: any): boolean => {
       }
 }
 
+
+/**
+ * 
+ * @param filePath 
+ * @param url 
+ * @returns 
+ */
+const encodeToHLS = (filePath: any, url: string) => {
+    const fileName = path.basename(url);
+    const newPath = path.normalize(__dirname + '/../../downloads/' + `${fileName}.m3u8`);
+    
+    const callback = () => {
+        logger.info('done');
+    }
+
+    return new Promise(( resolve, reject) => {
+        ffmpeg(filePath, { timeout: 432000 }).addOptions([
+            '-profile:v baseline', // baseline profile (level 3.0) for H264 video codec
+            '-level 3.0', 
+            '-s 640x360',          // 640px width, 360px height output video dimensions
+            '-start_number 0',     // start the first .ts segment at index 0
+            '-hls_time 10',        // 10 second segment duration
+            '-hls_list_size 0',    // Maxmimum number of playlist entries (0 means all entries/infinite)
+            '-f hls'               // HLS format
+          ]).output(newPath).on('end', callback).run()
+        
+    });
+}
+
 export default {
     getEnvironment,
     determineMissingProperty,
     downloadFile,
     encodeFile,
     getMetadata,
-    isUrl
+    isUrl,
+    encodeToHLS
 }
+

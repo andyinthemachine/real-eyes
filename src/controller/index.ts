@@ -1,5 +1,4 @@
 import { Request, Response } from 'express';
-import { unlinkSync } from 'fs';
 
 import { INFO } from '../constants';
 import { logger } from '../services/logger';
@@ -27,7 +26,7 @@ const getInfo = (req: Request, res: Response): any => {
  * @param res 
  * @returns 
  */
-const encodeFile = async (req: Request, res: Response) => {
+const encodeAsset = async (req: Request, res: Response) => {
     try {
         const [writer, localPath] = await utils.downloadFile(req.body.url);
         writer.on('finish',async () => {
@@ -63,11 +62,34 @@ const getMetadata = async(req: Request, res: Response ) => {
     } catch (error) {
         return res.status(500).json(errorResponse('There was a problem fething the metadata', 500));
     }
-   
+}
+
+/**
+ * Generate HLS assets
+ * @param req 
+ * @param res 
+ * @returns 
+ */
+const outputHls = async(req: Request, res: Response ) => {
+    const { asset } = req.query;
+    const url = String(asset)
+    try {
+        const [writer, localPath] = await utils.downloadFile(asset);
+        writer.on('finish',async () => {
+            logger.info('Successfully downloaded file');
+            const metadata = await utils.encodeToHLS(localPath, url);
+            logger.info('Successfully fetched metadata');
+
+            return res.status(200).json(successResponse({message: 'Hls conversion succesfull'}));
+        });
+    } catch (error) {
+        return res.status(500).json(errorResponse('There was a problem fething the metadata', 500));
+    }
 }
 
 export {
     getInfo,
-    encodeFile,
-    getMetadata
+    encodeAsset,
+    getMetadata,
+    outputHls
 }
