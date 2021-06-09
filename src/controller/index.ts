@@ -29,6 +29,7 @@ const getInfo = (req: Request, res: Response): any => {
 const encodeAsset = async (req: Request, res: Response) => {
     try {
         const [writer, localPath] = await utils.downloadFile(req.body.url);
+
         writer.on('finish',async () => {
             logger.info('Successfully downloaded file');
             const newPath = await utils.encodeFile(localPath, req.body.videoBitrate, req.body.videoCodec, req.body.url)
@@ -37,7 +38,7 @@ const encodeAsset = async (req: Request, res: Response) => {
             return res.status(200).json(successResponse(metadata));
         });
   } catch(error) {
-        return res.status(500).json(errorResponse('There was a problem encoding this file', 500));
+        return res.status(404).json(errorResponse('There was a problem encoding this file', 404));
     }
 }
 

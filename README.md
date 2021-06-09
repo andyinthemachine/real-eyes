@@ -25,5 +25,11 @@ This project is bootstraped with typescript. To run in dev mode use the command
 $ npm run dev
 ```
 
-To run in a production environment you first need to compile to Javascript and then run the application from the built files.
-To do that run `npm start` in your terminal. Other useful scripts are specified in the package.json file
+This starts the application on port 8000. To use a different port you can change specify the desired port in the config.ts file
+
+To run in a production environment you first need to compile to Javascript and then run the application from the compiled files.
+
+To do that run `npm start` in your terminal.
+Other useful scripts are specified in the package.json file.
+
+To view documentation make a `GET` request to the `/api/info` endpoint.

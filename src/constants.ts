@@ -29,7 +29,7 @@ const INFO: iInfo = {
         version: '1'
       },
       {
-        uri: 'api/metadata',
+        uri: 'api/metadata?asset=<downlodable-asset-url>',
         controller: 'getMetadata',
         description: 'Fetch metadata for a downloadable asset',
         method: 'GET',

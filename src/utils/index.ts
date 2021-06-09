@@ -2,6 +2,8 @@ import path from 'path';
 import fs from 'fs';
 import ffmpeg from 'fluent-ffmpeg';
 import axios from 'axios';
+import { v4 } from 'uuid';
+
 import { logger } from '../services/logger';
 
 /**
@@ -30,7 +32,7 @@ const determineMissingProperty = (arraytoCheck: string[], possibleFields: string
 const downloadFile = async (fileUrl: any): Promise<any> => {
     const fileName = path.basename(fileUrl);
     // The path of the downloaded file on our machine
-    const localFilePath = path.normalize(__dirname + '/../../downloads/' + fileName);
+    const localFilePath = path.normalize(__dirname + '/../../downloads/' + v4() + '-' + fileName);
 
     const response = await axios({
         method: 'GET',
@@ -48,7 +50,7 @@ const downloadFile = async (fileUrl: any): Promise<any> => {
  */
 const encodeFile = (localFilePath: string, videoBitrate: string, videoCodec: string, url: string) => {
     const fileName = path.basename(url);
-    const newPath = path.normalize(__dirname + '/../../downloads/' + `${fileName}.avi`);
+    const newPath = path.normalize(__dirname + '/../../downloads/' + `${v4() + '-' + fileName}.avi`);
     return new Promise(( resolve, reject) => {
         ffmpeg(localFilePath)
             .videoBitrate(videoBitrate)
@@ -108,7 +110,7 @@ const isUrl = (string: any): boolean => {
  */
 const encodeToHLS = (filePath: any, url: string) => {
     const fileName = path.basename(url);
-    const newPath = path.normalize(__dirname + '/../../downloads/' + `${fileName}.m3u8`);
+    const newPath = path.normalize(__dirname + '/../../downloads/' + `${v4() + '-' +fileName}.m3u8`);
     
     const callback = () => {
         logger.info('done');
@@ -137,4 +139,3 @@ export default {
     isUrl,
     encodeToHLS
 }
-
