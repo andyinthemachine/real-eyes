@@ -21,7 +21,12 @@ const getInfo = (req: Request, res: Response): any => {
     }
 };
 
-
+/**
+ * encode a file
+ * @param req 
+ * @param res 
+ * @returns 
+ */
 const encodeFile = async (req: Request, res: Response) => {
     try {
         const [writer, localPath] = await utils.downloadFile(req.body.url);
@@ -33,11 +38,36 @@ const encodeFile = async (req: Request, res: Response) => {
             return res.status(200).json(successResponse(metadata));
         });
   } catch(error) {
-        return res.status(500).json(errorResponse('There was a problem ecoding this file', 500));
+        return res.status(500).json(errorResponse('There was a problem encoding this file', 500));
     }
+}
+
+/**
+ * get file metadata
+ * @param req 
+ * @param res 
+ * @returns 
+ */
+const getMetadata = async(req: Request, res: Response ) => {
+    const { asset } = req.query;
+
+    try {
+        const [writer, localPath] = await utils.downloadFile(asset);
+        writer.on('finish',async () => {
+            logger.info('Successfully downloaded file');
+            const metadata = await utils.getMetadata(localPath);
+            logger.info('Successfully fetched metadata');
+
+            return res.status(200).json(successResponse(metadata));
+        });
+    } catch (error) {
+        return res.status(500).json(errorResponse('There was a problem fething the metadata', 500));
+    }
+   
 }
 
 export {
     getInfo,
-    encodeFile
+    encodeFile,
+    getMetadata
 }

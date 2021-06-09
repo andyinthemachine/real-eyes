@@ -2,7 +2,6 @@ import path from 'path';
 import fs from 'fs';
 import ffmpeg from 'fluent-ffmpeg';
 import axios from 'axios';
-import { logger } from '../services/logger';
 
 /**
  * fetch the current environment
@@ -22,7 +21,12 @@ const determineMissingProperty = (arraytoCheck: string[], possibleFields: string
     return possibleFields.filter((value: string) => !arraytoCheck.includes(value))
 }
 
-const downloadFile = async (fileUrl: string): Promise<any> => {
+/**
+ * download a file via http
+ * @param fileUrl 
+ * @returns 
+ */
+const downloadFile = async (fileUrl: any): Promise<any> => {
     const fileName = path.basename(fileUrl);
     // The path of the downloaded file on our machine
     const localFilePath = path.normalize(__dirname + '/../../downloads/' + fileName);
@@ -65,12 +69,12 @@ const encodeFile = (localFilePath: string, videoBitrate: string, videoCodec: str
  */
 const getMetadata = (filePath: any): Promise<any> => {
     return new Promise((
-        resolve: any,
-        reject: any
+        resolve,
+        reject
     ) => {
         ffmpeg.ffprobe(
             filePath,
-            (err: any, metadata: {}) => {
+            (err, metadata) => {
                 if (err) {
                     reject(new Error(err));
                 }
@@ -80,10 +84,26 @@ const getMetadata = (filePath: any): Promise<any> => {
     });
 }
 
+
+/**
+ * Determine if a string is a valid URL
+ * @param string 
+ * @returns 
+ */
+const isUrl = (string: any): boolean => {
+    try {
+        new URL(string);
+        return true;
+      } catch (_) {
+        return false;  
+      }
+}
+
 export default {
     getEnvironment,
     determineMissingProperty,
     downloadFile,
     encodeFile,
-    getMetadata
+    getMetadata,
+    isUrl
 }

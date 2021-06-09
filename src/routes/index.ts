@@ -1,6 +1,6 @@
 import { Application } from 'express';
-import { getInfo, encodeFile } from '../controller';
-import { validateFileEncodeBody } from '../validator';
+import { getInfo, encodeFile, getMetadata } from '../controller';
+import { validateFileEncodeBody, validateMetadataQuery } from '../validator';
 
 class Routes {
     public app: Application;
@@ -12,10 +12,12 @@ class Routes {
     constuctRoutes(): void{
         this.app.get('/api/info', getInfo);
 
+        this.app.get('/api/metadata', validateMetadataQuery ,getMetadata)
+
         this.app.post('/api/encode', validateFileEncodeBody, encodeFile);
 
         this.app.all('*', (_req, res) => {
-            res.send('plis work');
+            res.send('Welcome to Real Eyes Api');
         });
 
     }
